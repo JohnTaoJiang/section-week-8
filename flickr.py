@@ -25,19 +25,30 @@ def params_unique_combination(baseurl, params_d, private_keys=["api_key"]):
             res.append("{}-{}".format(k, params_d[k]))
     return baseurl + "_".join(res)
 
-def search_flickr_by_tags(tags):
+def search_flickr(tags = None, id = None):
     if not FLICKR_API_KEY:
         raise Exception('Flickr API Key is missing!')
 
     baseurl = "https://api.flickr.com/services/rest/"
-    params_diction = {
-        "method": "flickr.photos.search",
-        "format": "json",
-        "api_key": FLICKR_API_KEY,
-        "tags": tags,
-        "per_page": 10,
-        "nojsoncallback": 1
-    }
+    if not id:
+        params_diction = {
+            "method": "flickr.photos.search",
+            "format": "json",
+            "api_key": FLICKR_API_KEY,
+            "tags": tags,
+            "per_page": 10,
+            "nojsoncallback": 1
+        }
+    else:
+        params_diction = {
+            "method": "flickr.photos.getInfo",
+            "format": "json",
+            "api_key": FLICKR_API_KEY,
+            # "tags": tags,
+            "photo_id": photo_id,
+            "per_page": 10,
+            "nojsoncallback": 1
+        }
 
     unique_ident = params_unique_combination(baseurl,params_diction)
     if unique_ident in CACHE_DICTION:
@@ -77,9 +88,9 @@ print(photos_list)
 print("\n= vs = >> \n")
 
 for photo in photos_list:
-    print(photo)
+    # print(photo)
 
     # if you get encoding error, try this
-    # print(str(photo).encode('utf-8'))
+    print(str(photo).encode('utf-8'))
 
 print()
